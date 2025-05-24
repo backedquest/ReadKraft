@@ -1,0 +1,42 @@
+Database 
+1)Users
+2)Books
+3)Categories
+4)transactions
+
+
+
+Users : 
+name 
+email (unique)
+passsword
+preferredGenre -> refers categories (array)
+refreshToken
+role : Admin,User
+isVerified
+readingHistory : [books->refers books , lastPageRead , progress , lastRead ]
+library : [books->refer books,purchseDate]
+wishlist: [books->refer books]
+timestamps
+
+Books:
+name
+author
+size
+cover
+numberOfUsers
+category->refer from categories
+synopsis
+timestamps
+
+Categories:
+genre
+bookCount
+
+Transactions:
+userId-> refers users
+book-> refers books
+amount
+paymentMethod
+status : (pending,failes,completed)
+timestamps
