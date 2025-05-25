@@ -1,0 +1,30 @@
+user:
+loginUser(access,refresh token)
+logoutUser
+createUser(email verification)
+addToWishlist
+removeFromWishlist
+getWishlist
+
+getUserProfile
+updateProfile()
+changePassword()
+deleteAccount()
+getUserLibrary()
+syncReadingProgress()
+bookmark
+readBook
+buyBook 
+
+admin:
+addBook
+deleteBook
+updateBook
+createCategory
+deleteCategory
+getAllCategory
+verifyPayment
+
+commanControllers:
+globalSearch : Books,categories
+advanceBookFilter
