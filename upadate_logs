@@ -9,3 +9,7 @@ Today we decided on all are database schemas and made all the model
 Today we decided to make all the controllers need worked for 1.5 hrs
 have almost completed createUser function 
 Tomorrow need to complete all of them
+
+27 May 25
+Controllers : login,logout,addtowishlist,removefromwishlist
+routers

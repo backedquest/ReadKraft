@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema({
             default : 1
         },
         progress : {
-            type : float,
+            type : Number,
             default : 0
         } , 
         lastReadDate : {
@@ -71,5 +71,5 @@ const userSchema = new mongoose.Schema({
     timestamps : true
 })
 
-const userModel = mongoose.Model("user",userSchema)
+const userModel = mongoose.model("user",userSchema)
 export default userModel

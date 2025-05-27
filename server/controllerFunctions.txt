@@ -1,7 +1,7 @@
 user:
-loginUser(access,refresh token)
-logoutUser
-createUser(email verification)
+loginUser(access,refresh token) : done
+logoutUser : done
+createUser(email verification) : done
 addToWishlist
 removeFromWishlist
 getWishlist

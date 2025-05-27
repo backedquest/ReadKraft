@@ -5,6 +5,7 @@ import morgan from 'morgan'
 import helmet from 'helmet'
 import dotenv from 'dotenv'
 import connectDB from './config/connectDB.js'
+import userRouter from './routes/userRoute.js'
 
 
 dotenv.config()
@@ -20,6 +21,8 @@ app.use(morgan())
 app.use(helmet({
     crossOriginResourcePolicy: false
 }))
+
+app.use('/api/user',userRouter)
 
 const PORT = 8080 || process.env.PORT
 
