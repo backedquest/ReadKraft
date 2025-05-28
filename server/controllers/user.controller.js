@@ -1,6 +1,8 @@
 import userModel from '../models/user.model.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import bookModel from "../models/book.model.js";
+import transactionModel from "../models/transactions.model.js";
 
 
 export async function createUser(request,response){
@@ -236,3 +238,271 @@ export async function addToWishlist(request, response) {
         })
     }
 }
+
+export async function updateProfile(request,response){
+    try {
+        const userId = request.userId; // Comes from auth middleware
+        const updates = req.body; // Fields like name, email, etc.
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: 'Unauthorized'
+            })
+        }
+
+        const user = await userModel.findByIdAndUpdate(userId, updates, {
+            new: true,           // Return updated document
+            runValidators: true  // Ensure schema validation
+        });
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found',
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            message: 'Profile updated successfully',
+            data : user,
+        });
+    } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Server error',
+      error: true,
+    });
+  }
+}
+
+export async function getWishlist(request, response) {
+    try {
+        const { userId } = request.userId;
+
+        if (!userId) {
+            return response.status(400).json({
+                message: "User ID is required",
+                error: true,
+                success: false
+            });
+        }
+
+        const user = await userModel.findById(userId).populate('wishlist');
+
+        if (!user) {
+            return response.status(404).json({
+                message: "User not found",
+                error: true,
+                success: false
+            });
+        }
+
+        return response.json({
+            message: "Wishlist retrieved successfully",
+            wishlist: user.wishlist,
+            error: false,
+            success: true
+        });
+    } catch (error) {
+        return response.status(500).json({
+            message: error.message || "Internal Server Error",
+            error: true,
+            success: false
+        });
+    }
+}
+
+export async function deleteAccount(request,response){
+    try{
+        const userId = request.userId; // From JWT middleware
+
+        const user = await userModel.findByIdAndDelete(userId);
+
+        if (!user) {
+        return res.status(404).json({
+            success: false,
+            message: 'User not found or already deleted',
+        });
+        }
+        response.clearCookie('refreshToken', {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'Strict'
+        })
+
+        response.clearCookie('accessToken', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'Strict'
+        })
+        return res.json({
+            success: true,
+            message: 'Account deleted successfully',
+        });
+    }
+    catch(error){
+        return response.status(500).json({
+            message: error.message || "Internal Server Error",
+            error: true,
+            success: false
+        });
+    }
+}
+
+export async function getUserProfile(request, response) {
+    try {
+        const { userId } = request.userId;
+
+        if (!userId) {
+            return response.status(400).json({
+                message: "User ID is required",
+                error: true,
+                success: false
+            });
+        }
+
+        const user = await userModel.findById(userId).select('-password'); // Exclude password
+
+        if (!user) {
+            return response.status(404).json({
+                message: "User not found",
+                error: true,
+                success: false
+            });
+        }
+
+        return response.json({
+            message: "User profile fetched successfully",
+            profile: user,
+            error: false,
+            success: true
+        });
+    } catch (error) {
+        return response.status(500).json({
+            message: error.message || "Internal Server Error",
+            error: true,
+            success: false
+        });
+    }
+}
+
+export async function buyBook(request,response){
+    
+}
+
+export async function bookmarkPage(request, response) {
+    try {
+        const { userId } = request.userId;
+        const { bookId, pageNumber = 1 } = request.body;
+
+        if (!userId || !bookId) {
+            return response.status(400).json({
+                message: "User ID and Book ID are required",
+                error: true,
+                success: false
+            });
+        }
+
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return response.status(404).json({
+                message: "User not found",
+                error: true,
+                success: false
+            });
+        }
+
+        const book = await bookModel.findById(bookId);
+        if (!book) {
+            return response.status(404).json({
+                message: "Book not found",
+                error: true,
+                success: false
+            });
+        }
+
+        const totalPages = book.size || 1;
+        const progress = Math.min((pageNumber / totalPages) * 100, 100);
+
+        const existingEntryIndex = user.readingHistory.findIndex(entry =>
+            entry.book.toString() === bookId
+        );
+
+        if (existingEntryIndex !== -1) {
+            // Update existing history entry
+            user.readingHistory[existingEntryIndex].lastPageRead = pageNumber;
+            user.readingHistory[existingEntryIndex].progress = progress;
+            user.readingHistory[existingEntryIndex].lastRead = new Date();
+        } else {
+            // Add new history entry
+            user.readingHistory.push({
+                book: bookId,
+                lastPageRead: pageNumber,
+                progress,
+                lastRead: new Date()
+            });
+        }
+
+        await user.save();
+
+        return response.json({
+            message: "Page bookmarked successfully",
+            readingHistory: user.readingHistory,
+            error: false,
+            success: true
+        });
+
+    } catch (error) {
+        return response.status(500).json({
+            message: error.message || "Internal Server Error",
+            error: true,
+            success: false
+        });
+    }
+}
+
+
+export async function getUserLibrary(request, response) {
+    try {
+        const { userId } = request.userId;
+
+        if (!userId) {
+            return response.status(400).json({
+                message: "User ID is required",
+                error: true,
+                success: false
+            });
+        }
+
+        // Populate book details from library
+        const user = await userModel.findById(userId).populate({
+            path: 'library',
+            populate: {
+                path: 'book', // only needed if library is an array of { book, purchaseDate }
+                model: 'book'
+            }
+        });
+
+        if (!user) {
+            return response.status(404).json({
+                message: "User not found",
+                error: true,
+                success: false
+            });
+        }
+
+        return response.json({
+            message: "User library fetched successfully",
+            library: user.library,
+            error: false,
+            success: true
+        });
+
+    } catch (error) {
+        return response.status(500).json({
+            message: error.message || "Internal Server Error",
+            error: true,
+            success: false
+        });
+    }
+}
+

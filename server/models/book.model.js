@@ -13,6 +13,10 @@ const bookSchema = new mongoose.Schema({
         type : Number,
         require : [true,"Provide Name"]
     },
+    price: { 
+        type: Number, 
+        default: 0  
+    },
     cover  : {
         type : String,
         default : ""
