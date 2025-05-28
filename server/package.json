@@ -2,10 +2,10 @@
   "name": "server",
   "version": "1.0.0",
   "main": "index.js",
-  "type" : "module",
+  "type": "module",
   "scripts": {
-    "start" :"node index.js",
-    "dev" :"nodemon index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,7 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.15.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "stripe": "^18.1.1"
   }
 }
