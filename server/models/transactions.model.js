@@ -17,7 +17,7 @@ amount : {
 },
 paymentmethod : {
         type : String,
-        enum : ["UPI","DEBIT CARD","CREDIT CARD","NET BANKING"],
+        enum : ["UPI","DEBIT CARD","CREDIT CARD","NET BANKING","FREE"],
         required : [true,"Provide it"]
 },
 status : {

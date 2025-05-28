@@ -2,18 +2,16 @@ user:
 loginUser(access,refresh token) : done
 logoutUser : done
 createUser(email verification) : done
-addToWishlist
-removeFromWishlist
-getWishlist
-
-getUserProfile
-updateProfile()
-changePassword()
-deleteAccount()
+addToWishlist : done
+removeFromWishlist : done
+getWishlist : done
+getUserProfile : done
+updateProfile() : done
+///changePassword()
+deleteAccount() : done
 getUserLibrary()
-syncReadingProgress()
-bookmark
-readBook
+bookmark : done
+///readBook
 buyBook 
 
 admin:
