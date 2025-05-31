@@ -4,7 +4,7 @@ const categorySchema = new mongoose.Schema({
     genre : {
         type : String,
         unique : true,
-        require : true
+        required : true
     },
     bookCount : {
         type : Number,
@@ -12,5 +12,5 @@ const categorySchema = new mongoose.Schema({
     }
 })
 
-const categoryModel = mongoose.Model('category',categorySchema)
+const categoryModel = mongoose.model('category',categorySchema)
 export default categoryModel

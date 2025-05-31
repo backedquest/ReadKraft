@@ -385,64 +385,64 @@ export async function getUserProfile(request, response) {
     }
 }
 
-export async function buyBook(request,response){
-    try {
-    const userId = request.userId;
-    const { bookId } = request.body;
+// export async function buyBook(request,response){
+//     try {
+//     const userId = request.userId;
+//     const { bookId } = request.body;
 
-    const user = await userModel.findById(userId);
-    const book = await bookModel.findById(bookId);
+//     const user = await userModel.findById(userId);
+//     const book = await bookModel.findById(bookId);
 
-    if (!user || !book) {
-      return res.status(404).json({ success: false, message: "User or Book not found" });
-    }
+//     if (!user || !book) {
+//       return res.status(404).json({ success: false, message: "User or Book not found" });
+//     }
 
-    const alreadyBought = user.library.some(entry => entry.book.toString() === bookId);
-    if (alreadyBought) {
-      return res.status(400).json({ success: false, message: "Book already purchased" });
-    }
+//     const alreadyBought = user.library.some(entry => entry.book.toString() === bookId);
+//     if (alreadyBought) {
+//       return res.status(400).json({ success: false, message: "Book already purchased" });
+//     }
 
-    const amount = book.price || 0;
+//     const amount = book.price || 0;
 
-    if (amount === 0) {
-      user.library.push({ book: bookId, purchaseDate: new Date() });
-      await user.save();
+//     if (amount === 0) {
+//       user.library.push({ book: bookId, purchaseDate: new Date() });
+//       await user.save();
 
-      await transactionModel.create({
-        userId,
-        book: bookId,
-        amount: 0,
-        paymentMethod: "free",
-        status: "completed"
-      });
+//       await transactionModel.create({
+//         userId,
+//         book: bookId,
+//         amount: 0,
+//         paymentMethod: "free",
+//         status: "completed"
+//       });
 
-      return res.status(200).json({ success: true, message: "Book purchased for free" });
-    }
+//       return res.status(200).json({ success: true, message: "Book purchased for free" });
+//     }
 
-    // Stripe PaymentIntent for paid book
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: amount ,
-      currency: "inr",
-      metadata: {
-        userId: userId.toString(),
-        bookId: bookId.toString()
-      }
-    });
+//     // Stripe PaymentIntent for paid book
+//     const paymentIntent = await stripe.paymentIntents.create({
+//       amount: amount ,
+//       currency: "inr",
+//       metadata: {
+//         userId: userId.toString(),
+//         bookId: bookId.toString()
+//       }
+//     });
 
-    return res.status(200).json({
-      success: true,
-      clientSecret: paymentIntent.client_secret,
-      message: "Payment initiated"
-    });
+//     return res.status(200).json({
+//       success: true,
+//       clientSecret: paymentIntent.client_secret,
+//       message: "Payment initiated"
+//     });
 
-    } catch (error) {
-        return response.status(500).json({
-            message: error.message || "Internal Server Error",
-            error: true,
-            success: false
-        });
-    }
-
+//     } catch (error) {
+//         return response.status(500).json({
+//             message: error.message || "Internal Server Error",
+//             error: true,
+//             success: false
+//         });
+//     }
+// }
 export async function bookmarkPage(request, response) {
     try {
         const { userId } = request.userId;

@@ -15,6 +15,10 @@ app.use(cors({
     credentials:true,
     origin: process.env.FRONTEND_URL
 }))
+
+// Special handling for Stripe webhook
+app.use('/api/user/webhook', express.raw({ type: 'application/json' }));
+
 app.use(express.json())
 app.use(cookieParser())
 app.use(morgan())

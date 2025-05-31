@@ -3,15 +3,15 @@ import mongoose from 'mongoose'
 const bookSchema = new mongoose.Schema({
     name  : {
         type : String,
-        require : [true,"Provide Name"]
+        required : [true,"Provide Name"]
     },
     author  : {
         type : String,
-        require : [true,"Provide Name"]
+        required : [true,"Provide Name"]
     },
     size  : {
         type : Number,
-        require : [true,"Provide Name"]
+        required : [true,"Provide Name"]
     },
     price: { 
         type: Number, 
@@ -31,7 +31,7 @@ const bookSchema = new mongoose.Schema({
     },
     synopsis  : {
         type : String,
-        require : [true,"Provide Synopsis"]
+        required : [true,"Provide Synopsis"]
     }
 
 },
@@ -39,5 +39,5 @@ const bookSchema = new mongoose.Schema({
     timestamps : true
 })
 
-const bookModel = mongoose.Model("books",bookSchema)
+const bookModel = mongoose.model("books",bookSchema)
 export default bookModel
