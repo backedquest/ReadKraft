@@ -3,16 +3,16 @@ import mongoose from 'mongoose'
 const userSchema = new mongoose.Schema({
     name  : {
         type : String,
-        require : [true,"Provide Name"]
+        required : [true,"Provide Name"]
     },
     email : {
         type : String,
-        require :[true,"Provide Email"],
+        required :[true,"Provide Email"],
         unique : true
     },
     password : {
         type : String,
-        require : [true,"Provide password"]
+        required : [true,"Provide password"]
     },
     preferredGenre : [{
         type :mongoose.Schema.Types.ObjectId,

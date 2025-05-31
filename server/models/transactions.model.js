@@ -4,16 +4,16 @@ const transactionSchema = new mongoose.Schema({
  userid : {
         type : mongoose.Schema.Types.ObjectId,
         ref : "user",
-        require : [true,"Provide ID"]
+        required : [true,"Provide ID"]
     },
 book : {
  type : mongoose.Schema.Types.ObjectId,
-        ref : "book",
-        require : [true,"Provide Name"]
+        ref : "books",
+        required : [true,"Provide Name"]
 },
 amount : {
         type : Number,
-         require : [true,"Provide Amount"]
+         required : [true,"Provide Amount"]
 },
 paymentmethod : {
         type : String,
@@ -30,5 +30,5 @@ status : {
     timestamps : true
 }
 )
-const transactionModel = mongoose.Model("transactions",transactionSchema)
+const transactionModel = mongoose.model("transactions",transactionSchema)
 export default transactionModel
